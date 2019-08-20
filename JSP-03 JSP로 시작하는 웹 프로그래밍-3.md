@@ -329,6 +329,35 @@ name=cbk&address=seoul&pet=cat
 ```
   
 ## 5.3. 요청 헤더 정보의 처리
-HTTP 프로토콜은 헤더 정보에 부가적인 정보를 담도록 하고 있다.  
-예를 들어, 웹 브라우저는 웹 브라우저의 종류, 선호하는 언어에 대한 정보를 헤더에 담아서 전송한다.  
-
+HTTP 프로토콜은 헤더 정보에 부가적인 정보를 담도록 하고 있다.    
+예를 들어, 웹 브라우저는 웹 브라우저의 종류, 선호하는 언어에 대한 정보를 헤더에 담아서 전송한다.    
+   
+requset 기본 객체는 이러한 헤더 정보를 읽어올 수 있는 기능을 제공하고 있다.  
+```
+getHeader(String name)        | String                | 지정한 헤더의 값을 구한다.    
+getHeaders(String name)       | java.util.Enumertaion | 지정한 헤더의 목록을 구한다.
+getHeaderNames()              | java.util.Enumeration | 모든 헤더의 이름을 구분한다.
+getIntHeader(String name)     | int                   | 지정한 헤더의 값을 정수로 읽어온다.
+getDateHeader(String name)    | long                  | 지정한 헤더의 값을 시간값으로 읽어온다.
+                                                      | 단 시간은 1970년 1월 1일 기준 밀리세컨드 단위
+```
+```getHeader(String name)```은 ```name```에 알맞은 헤더의 이름을 입력하면 그 값을 String으로 리턴한다.     
+```getHeaders(String name)```은 ```name```에 알맞은 헤더의 이름을 입력하면 헤더의 목록을 리턴한다.    
+```getHeaderNames() ```은 모든 헤더의 이름을 반환한다.    
+```getIntHeader(String name)``` ```name```에 해당되는 헤더의 값을 ```int```형으로 리턴한다.   
+```getDateHeader(String name)``` ```name```에 해당되는 헤더의 값을 ```long```형으로 리턴한다.  
+정확히 말하면 ```현재시간 - 1970년 1월 1일``` 시간의 밀리세컨드 단위 초의 값을 나타낸다.     
+  
+**간단한 사용법**
+```
+<%
+  Enumeration headerEnum = request.getHeaderNames();
+  while(headerEnum.hasMoreElements()){
+    String headerName = (String)headerEnum.nextElement();
+    String headerValue = request.getHeader(headerName);
+%>
+  <%= headerName %> = <%= headerValue %> <br>
+<%
+  }
+%>
+```

@@ -230,11 +230,12 @@ http://localhost:8080/chap03/viewParameter.jsp?name=%ED%..중략..&pet=dog&pet=c
 여기서 사용된 쿼리 문자열은 바로 전송하는 파라미터의 데이터의 값이라고 생각하면 된다.        
 ```GET 방식```은 이러한 특징이 있기에 따로 폼요소를 사용하지 않고 위에 결과처럼 문자열을 붙여서 사용하는 방법도 있다.       
   
-**GET 방식 사용방법**
+**GET 방식 사용방법**  
+  
 1. <a> 태그의 링크 태그에 쿼리 문자열 추가(href=""에 쿼리 문자열)
 2. <form> 태그의 method 속성 값 (method="get/post")
 3. 웹 브라우저에 주소에 직접 쿼리 문자열을 포함
-  
+    
 ```  
 GET /chap03/viewParameter.jsp?name=%ED%..중략..&pet=dog&pet=cat HTTP/1.1        // <-- 여기 파라미터 붙임
 HOST: localhost:8080  
@@ -326,3 +327,8 @@ name=cbk&address=seoul&pet=cat
   String name=requset.getParameter("addresss");
 %>
 ```
+  
+## 5.3. 요청 헤더 정보의 처리
+HTTP 프로토콜은 헤더 정보에 부가적인 정보를 담도록 하고 있다.  
+예를 들어, 웹 브라우저는 웹 브라우저의 종류, 선호하는 언어에 대한 정보를 헤더에 담아서 전송한다.  
+

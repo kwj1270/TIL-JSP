@@ -1,6 +1,6 @@
 JSP로 시작하는 웹 프로그래밍-3
 =======================
-# 5. request 기본 객체
+# 5. request 기본 객체  
 ```request``` 기본 객체는 JSP 페이지에서 가장 많이 사용되는 기본 객체로서  
 웹 브라우저의 **요청**과 관련이 있다.
   
@@ -191,13 +191,87 @@ request.getParameterMap() 메서드 사용
 name = 홍길동
 ```
 위 코드를 하나씩 분석해보자  
-   
-**getParameterValues()**
-매개변수 ```(String name)``` 에 ```"name"```과 ```"adress"```를 주었다.    
-이는 기존 ```<input> 요소```에서의 **name 속성의 값**을 의미한다.    
-그리하여 기존 ```<input> 요소```의 ```value값```을 가져와 출력을 하는데      
-텍스트 타입은 텍스트 필드에 입력된 값이 value의 값이 되니 이를 출력하고 있다.  
+     
+**getParameterValues()**     
+매개변수 ```(String name)``` 에 ```"name"```과 ```"adress"```를 주었다.      
+이는 기존 ```<input> 요소```에서의 **name 속성의 값**을 의미한다.      
+그리하여 기존 ```<input> 요소```의 ```value값```을 가져와 출력을 하는데       
+텍스트 타입은 텍스트 필드에 입력된 값이 value의 값이 되니 이를 출력하고 있다.    
+       
+**getParameterNames()**    
+```getParameterNames()```는 모든 요소의 ```name 속성의 값```을 의미하고      
+이를 ```java.util.Enumeration```형식으로 반환한다.    
+ ```java.util.Enumeration```은 열거형을 의미하는 인터페이스로      
+ ```iterator``` 반복자와 비슷한 기능을 가지고 있는 컬렉션프레임워크에 접근하는 인터페이스다.     
+ 내장된 메소드는 ```hasMoreElements()``` ```nextElement()```로서      
+ ```hasMoreElements()```사용시 현재 번지에 저장된 값이 있는지 없는지 여부를 판단하는 것이고   
+ ```nextElement()``` 사용시 현재 번지의 값을 리턴하고 다음 위치로 이동하는 메소드이다.      
+흔히 다음 번지에 저장된 값을 찾고 사용하는 것으로 햇갈리기 쉬운데 사실 내부적으로 이렇게 동작한다.       
+       
+**getParameterMap()**   
+```getParameterMap```은 자바스크립트의 객체(또는 맵)처럼 ```Key```와 ```Value``` 형태로 값을 리턴한다(Map)     
+그래서 이를 ```get(Key값)```을 입력하면 해당 하는 ```Value``` 값이 반환된다.     
+여기서 ```Value```는 일반적인 값 이외에도 배열이나 객체를 저장해도 되므로    
+안정성을 위하여 ```String[] nameParam = (String[])parameterMap.get("name")```와 같이 ```String배열```에 저장시킨다.   
   
-**getParameterNames()**
-```getParameterNames()```는 모든 요소의 ```name 속성의 값```을 의미하고  
-이를 ```java.util.Enumeration```
+### 5.2.3. GET 방식 전송과 POST 방식 전송
+웹 브라우저는 ```GET 방식```과 ```POST 방식```의 두 가지 방식 중 한 가지를 이용해서 파라미터를 전송한다.  
+전송 방식에 따라 동작하는 방법이 많이 다르니 기억해두자
+  
+**GET 방식**
+```
+<form action="전송경로" method="get">...</form>
+__________________________________________________
+주소창 결과)
+
+http://localhost:8080/chap03/viewParameter.jsp?name=%ED%..중략..&pet=dog&pet=cat
+```  
+이렇듯 ```GET 방식```은 URL의 경로 뒤에 물음표```(?)```와 함께 쿼리 문자열을 보낸다.        
+여기서 사용된 쿼리 문자열은 바로 전송하는 파라미터의 데이터의 값이라고 생각하면 된다.      
+```GET 방식```은 이러한 특징이 있기에 따로 폼요소를 사용하지 않고 위에 결과처럼 문자열을 붙여서 사용하는 방법도 있다.     
+```  
+GET /chap03/viewParameter.jsp?name=%ED%..중략..&pet=dog&pet=cat HTTP/1.1        // <-- 여기 파라미터 붙임
+HOST: localhost:8080  
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,...생략
+User-Agent: Mozlia/5.0 ...생략
+Accept-Encoding:gzip, deflate
+Accept-Language: en-US;q=0.8,en;q=0.5
+Cache-Control: max-age=0   
+```  
+또한, ```GET 방식```을 이용해서 파라미터를 전송시, 요청 데이터의 요청줄에 파라미터를 포함시킨다.      
+이는 한편으로 보안에 문제가 생길 수 있는 요소이다.        
+       
+**POST 방식**   
+```
+<form action="전송경로" method="post">...</form>
+__________________________________________________
+주소창 결과)
+
+http://localhost:8080/chap03/viewParameter.jsp
+```
+```GET 방식```과 다르게 ```POST```방식은 요청 데이터에 파라미터를 포함시키지 않는다.   
+```  
+POST /chap03/viewParameter.jsp HTTP/1.1        // <-- 여기 파라미터 붙임
+HOST: localhost:8080  
+Connection: keep-alive
+Conntent-Length: 30
+Accept: text/html,application/xhtml+xml,...생략
+Origign: localhost:8080  
+User-Agent: Mozlia/5.0 ...생략
+Content-Type:application/x-www-form-urlencodeed
+Referer: http://localhost:8080/chap03/form.jsp
+Accept-Encoding:gzip, deflate
+Accept-Language: en-US;q=0.8,en;q=0.6
+Cache-Control: max-age=0   
+Cookie:JSESSIONID=8D2476E3EB99C478A04BB59CEBC3858C
+
+name=cbk&address=seoul&pet=cat
+``` 
+또한 요청 데이터의 요청줄에도 파라미터의 값을 포함시키지 않는다.      
+단, 마지막에 헤더 형식이 아닌 단순 ```이름&값``` 형식으로 파라미터 값을 추가시킨다.      
+    
+```GET 방식``` 웹브라우저, 웹 서버 또는 웹 컨테이너에 따라 전송할 수 있는 파라미터 값의 길이에 제한이 있을수 있다.         
+반면에 ```POST```방식은 데이터 영역을 이용해서 데이터를 전송하기 때문에      
+웹 브라우저나 웹 서버 등에 상관없이 전송할 수 있는 파라미터의 길이에 제한이 없다.    
+

@@ -1,0 +1,135 @@
+기본 객체와 영역
+=======================
+# 1. 기본 객체
+JSP는 9가지 기본 객체를 제공하고 있다.  
+```
+request         | 클라이언트의 요청 정보를 저장한다.  
+response        | 응답 정보를 저장한다.
+pageContext     | JSP 페이지에 대한 정보를 저장한다.
+session         | HTTP 세션 정보를 저장한다.
+application     | 웹 어플리케이션에 대한 정보를 저장한다.
+out             | JSP 페이지가 생성하는 결과를 출력할 때 사용하는 출력 스트림이다.
+config          | JSP 페이지에 대한 설정 정보를 저장한다.
+page            | JSP 페이지를 구현한 자바 클래스 인스턴스이다.
+exception       | 익셉션 객체이다. 에러 페이지에서만 사용한다.
+```
+  
+***
+# 2. out 기본 객체  
+JSP 페이지가 생성하는 모든 내용은 out 기본 객체를 통해 전송된다.     
+JSP 페이지 내에서 사용하는 비-스크립트 요소들(HTML 코드와 텍스트)은 out 기본 객체에 그대로 전달된다.   
+그리고 값을 출력하는 표현식의```<%= %>```결과값도 out 기본 객체에 전달된다.    
+     
+out 기본 객체는 웹 브라우저에 데이터를 전송하는 출력 스트림으로서 JSP 페이지가 생성한 데이터를 출력한다.    
+```
+1)
+
+<html>
+<% out.println("<html>"); %> 
+
+두개의 코드는 같은 코드이다.
+_________________________________________________
+2)
+
+안녕하세요
+<% out.println("안녕하세요"); %>
+
+두개의 코드는 같은 코드이다.
+_________________________________________________
+3) 
+
+a는 3이라 가정하고
+<%= a %>
+<% out.println(a) %>
+  
+두개의 코드는 같은 코드이다.   
+```
+기존 비-스크립트 요소들을 사용하는데도 문제가 없기에 ```out 기본 객체```가 언제 사용되는지 궁금할 수도 있다.     
+```out 기본 객체```는 스트립트릿```<% %>```과 표현식```<%= %>```이 복잡하게 섞여 있을때 주로 사용된다.    
+    
+**예시**
+```
+일반)
+
+<% if(grade > 10) { %>
+<%= gradeStringA %>
+<%} else if( grade > 5){ %>
+<%= gradeStringB %>
+<% } %>
+____________________________________
+out 기본 객체 사용)
+
+<%
+  if(grade > 10){
+    out.println(gradeStringA);
+  } else if(grade > 5){
+    out.println(gradeStringB);
+  }
+%>  
+```
+하지만 복잡한 조건 비교 때문에 출력 코드가 복잡해지는 경우가 아니면 ```out 기본 객체```를 사용하지 않는 것이 좋다.     
+      
+## 2.1. out 기본 객체의 출력 메서드  
+  
+* print() : 데이터를 출력한다.    
+* println() : 데이터를 출력하고, 개행을 한다.  
+* newLine() : 개행을 한다.    
+  
+```print()``` 와 ```println()```이 출력할 수 있는 데이터는 기본 데이터 타입이다.(String 포함)    
+   
+## 2.2. out 기본 객체와 버퍼의 관계
+사실 page 디렉티브의 ```buffer 속성```으로 제어하는 버퍼는    
+out 기본 객체가 내부적으로 사용하고 있는 버퍼를 의미하는 것이다.    
+그래서 ```<% @page buffer="16KB" %>```로 설정을 하면 ```out 기본 객체```의 버퍼는 ```16KB``` 가 된다.   
+   
+```out 기본 객체```는 이러한 내부에 존재하는 버퍼를 제어하는 메소드를 제공한다.  
+```
+getBufferSize()   | 버퍼의 크기(사이즈)를 구한다.
+getRemaining()    | 현재 버퍼의 남은 크기를 구한다.
+clear()           | 버퍼의 내용을 비운다. 만약 버퍼를 이미 플러시 했다면 IOException을 발생시킨다.
+clearBuffer()     | 버퍼의 내용을 비우지만 버퍼가 비워져있어도 에러를 발생시키지 않는다.
+flush()           | 버퍼를 플러시한다. 즉 버퍼의 내용을 클라이언트에 전송한다. (autoFlush="false")
+isAutoFlush()     | 오토 플러시를 할 경우 true를 리턴한다. 물론 flush()를 통해 하면 false 반환한다.   
+```
+**예제**
+```
+<%@ page contentType = "text/html; charset=utf-8" %>
+<%@ page buffer="16KB" autoFlush="false" %>
+<html>
+<head><title>버퍼 정보</title></head>
+<body>
+ 
+버퍼 크기 : <%= out.getBufferSize() %> <br>
+남은 크기 : <%= out.getRemaining() %> <br>
+autoFlush : <%= out.isAutoFlush() %> <br>
+  
+</body>  
+</html>    
+```   
+  
+***   
+# 3. pageContext 기본 객체  
+```pageContext 기본 객체```는 JSP 페이지와 일대일로 연결된 객체로 다음의 기능을 제공한다.     
+  
+* 기본 객체 구하기    
+* 속성 처리하기  
+* 페이지 흐름 제어하기    
+* 에러 데이터 구하기     
+        
+```pageContext 기본 객체```를 직접 사용하는 경우는 드물지만 커스텀 태그를 구현할 때 사용된다.          
+개인적인 생각으로 간단히 말하면 ```pageContext``` 는 현재 페이지를 객체로 나타내는 것이다.      
+    
+## 3.1. 기본 객체 접근 메서드
+```
+getRequest()          | request 기본 객체를 구한다. ( == request) 
+getResponse()         | response 기본 객체를 구한다. ( == response )
+getSession()          | session 기본 객체를 구한다. ( == session )
+getServletContext()   | application 기본 객체를 구한다. ( == application )
+getServletConfig()    | config 기본 객체를 구한다. ( == config )
+getOut()              | out 기본 객체를 구한다. ( == out )
+getException()        | exception 기본 객체를 구한다. ( == exception )
+getPage()             | page 기본 객체를 구한다. ( == page )
+```
+위 메서드를 통해 알 수 있듯이        
+손 쉽게 사용할 수 있는 기본 객체를 메서드를 통해 호출해서 사용한다.       
+당연한 말이겠지만 일반적으로 호출하는 기본 객체와 같은 객체를 참조하기에 ```==```을 해도 ```true``` 가 나온다.      

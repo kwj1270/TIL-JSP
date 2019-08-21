@@ -77,3 +77,89 @@ Expires         | HTTP 1.0 버전에서 지원하는 헤더
 ```
 
 ## 6.3. 리다이렉트를 이용해서    
+response 기본 객체에서 많이 사용되는 기능 중 하나는 리다이렉트 기능이다.    
+리다이렉트는 웹 서버가 웹 브라우저에게 다른 페이지로 이동하라고 응답하는 기능이다.   
+즉, 리다이렉트 기능은 웹 서버 측에서 웹 브라우저에게 어떤 페이지로 이동하라고 지정하는 것이다.  
+예를 들면 사용자가 로그인에 성공한 후 메인 페이지로 자동으로 이동하는 기능이 이에 해당한다.    
+    
+* response.sendRedirect(String location경로)
+  
+```
+<%
+  //JSP 코드
+  ...
+  response.sendRedirect("이동할 페이지 경로");
+%>
+```
+```response``` 기본 객체는 ```sendRedirect(String location경로)``` 메서드를 이용해  
+웹 브라우저가 리다이렉트 하도록 지시할 수 있다.  
+
+**예시**
+```
+<% @page contentType="text/html; charset=utf-8" %>
+<%
+  String id = request.getParameter("memberId");
+  if(id !==null && id.equals("modvirus")){
+    response.sendRedirect("/chap03/index.jsp");
+  } else {
+%>
+  <html>
+  <head><title>로그인에 실패</title></head>
+  <body>
+  잘못된 아이디입니다.
+  </body>
+  </html>
+<%  
+  }
+%>
+```
+위 예시는 로그인 처리를 나타내는 예시이다.   
+로그인이 성공하면 리다이렉트를 통해 ```"/chap03/index.jsp"```로 이동하라고 지시를 내린다.  
+로그인이 실패할 경우 '로그인 실패' HTML을 생성해서 보여준다.  
+  
+```request.getParameter("https://github.com/kwj1270/TIL-JSP")```  
+같은 서버 주소에 위치한 페이지를 리다이렉트뿐만 아니라
+다른 서버 주소에 위치한 페이지로 이동하도록 지정할 수도 있다.  
+   
+```request.getParameter("/chap03/index.jsp?name=%EC%9E%90%EB%BO%94")```   
+리다이렉트는 URL을 통해 페이지를 이동시키는 작업을 수행하므로 ```GET 방식```으로 보내진다.   
+이럴때 파라미터의 값을 넘길일이 있다면 위와 같이 인코딩 작업을 해주어야한다.  
+개발자가 인코딩 작업을 손으로 직접 계산해야 한다면 매우 번거롭고 괴롭겠지만  
+**java.net.URLEncoder 클래스**를 사용하여 **encode() 클래스 메서드**를 사용하면 이를 해결할 수 있다.   
+사용법은 ```URLEncoder.encode(바꿀 값 , 변경할 캐릭터 셋)```이다.  
+  
+**예시**  
+```
+<% @page contentType="text/html; %>
+<% @page import="java.net.URLEncoder" %>
+<%
+  String value = "자바";
+  String encodedValue = URLEncoder.encode(value, "utf-8");
+  response.sendRedirect("/chap03/index.jsp?name="+encodedValue); //문자열+문자열
+%>
+```
+
+***
+# 7. JSP 주석
+JSP의 주석은 HTML영역과 자바영역이 따로 구분되어져 있기에 각각 언어에 맞는 주석을 사용해주어야 한다.
+스크립트릿과 선언부의 코드 블록은 자바 코드이므로 자바의 주석을 사용할 수잇다.(```//```, ```/* */```)
+JSP 코드 자체를 주석처리 하고 싶다면 ```<%-- 내용 --%>```으로 주석처리를 해주어야한다.  
+```
+<%
+  // 주석 처리할 내용
+  
+  /*
+  주석 처리할  내용 
+  */
+%>
+
+<%!
+  // 주석 처리할 내용
+  
+  /*
+  주석 처리할  내용 
+  */
+%>
+
+<%-- 주석 처리할 내용 --%>
+```

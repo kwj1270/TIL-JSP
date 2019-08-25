@@ -154,10 +154,10 @@ public class MemberInfo{
 ```
 소스 코드를 작성 했다면, 명령 프롬프트를 열고 Memberinfo.java 클래스를 컴파일 하자.
   
-1. cd C\apache-tomcat-버전\webapps\chap08\WEB-INF\  
-2. mkdir classes
-  * WEB-INF 폴더에 classes 하위 폴더를 생성한다. 직접 디렉토리로 이동해 생성해주어도 된다.   
-3. jvavc -encoding UTF-8 -d classes src\chap08\member\MemberInfo.java   
+1. cd C\apache-tomcat-버전\webapps\chap08\WEB-INF\    
+2. mkdir classes    
+  * WEB-INF 폴더에 classes 하위 폴더를 생성한다. 직접 디렉토리로 이동해 생성해주어도 된다.     
+3. jvavc -encoding UTF-8 -d classes src\chap08\member\MemberInfo.java     
    
 컴파일에 성공하면, ```chap08\WEB-INF\classes\chap08\member``` 폴더에 ```MemberInfo.class``` 파일이 생성된다.   
     

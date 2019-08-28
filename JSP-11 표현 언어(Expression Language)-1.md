@@ -1,4 +1,4 @@
-표현 언어(Expression Language)
+표현 언어(Expression Language)-1
 =======================
 표현 언어(Expression Language)는 다른 형태의 스크립트 언어로서 스크립트 요소 중의 하나이다.  
 표현 언어는 표현식보다 간결하고 편리하기 때문에 많이 사용된다.     

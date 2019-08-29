@@ -1,4 +1,4 @@
-표현 언어(Expression Language)-2
+표현 언어(Expression Language)-3
 =======================
 # 3. EL에서 객체의 메서드 호출
 ```JSP 2.2/EL 2.2``` 버전 부터 객체의 메서드를 직접 호출할 수 있다.  

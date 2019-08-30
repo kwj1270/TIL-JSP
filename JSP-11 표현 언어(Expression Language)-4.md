@@ -433,7 +433,7 @@ JSP 페이지의 ```page 디렉티브```를 이요해서 EL을 활성화 시키�
 <%-- #{expr} 형식의 EL을 비활성화 시키는 경우 --%>
 <%@ page deferredSyntaxAllowedAsLiteral="true" %>
 ```
-web.xml 파일과 JSP 페이지에서 EL 비활성화 상태에 따라서 JSP 페이지의 EL 요소가 처리되는지의 여부는 아래와 같다.   
+```web.xml``` 파일과 JSP 페이지에서 EL 비활성화 상태에 따라서 JSP 페이지의 EL 요소가 처리되는지의 여부는 아래와 같다.   
 ```
  __________________________________________________________________________________________________________________
 | web.xml의 JSP 설정의  | page 디렉티브의     | EL 처리 여부                                                         | 
@@ -449,4 +449,41 @@ web.xml 파일과 JSP 페이지에서 EL 비활성화 상태에 따라서 JSP �
 |______________________|____________________|_____________________________________________________________________|
 |상관없음               |true                | EL을 처리하지 않는다.                                                |                
 |______________________|____________________|_____________________________________________________________________|
+```
+   
+## 8.3. web.xml 파일의 버전에 따른 EL 처리
+```web.xml``` 파일이 사용하는 서블릿 버전에 따라서 EL 지원 여부가 결정된다.  
+  
+* 서블릿 2.3 버전의 web.xml : EL을 지원하지 않는다. 
+* 서블릿 2.4 버전의 web.xml : ```#{expr}```을 지원하지 않는다.
+* 서블릿 2.5/서블릿 3.0/서블릿 3.1 버전 web.xml : ```${expr}``` 와 ```# {expr}```을 지원한다.
+
+서블릿 2.3 버전의 web.xml 파일은 XML 스키마가 아닌 DTD를 이용해서 web.xml 파일의 구조를 정의하고 있다.     
+서블릿 기준 2.3으로 작성되어 있을 경우 JSP는 1.2 버전을 사용하게 되는데,     
+JSP 1.2는 EL을 지원하지 않으므로 JSP에 포함된 EL을 처리하지 않는다.      
+```
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Web Appication2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+  
+<web-app>
+  ...
+</web-app>
+```
+서블릿 2.4 버전의 경우 XML 네임스페이스가 j2ee로 끝나고     
+스키마의 경로가 ```htpp://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd```를 가리키고 있다.    
+web.xml 파일이 서블릿 2.4 기준으로 작성된 경우 JSP는 2.0 버전을 사용하게 되며,     
+JSP 2.0dms ```#{expr}``` 형식의 EL을 지원하지 않으므로 JSP에 포함된 ```#{expr}```형식은 문자열로 처리된다.    
+```
+<?xml version="1.0" encoding="utf-8" ?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://java.sun.com/xml/ns/j2ee"       
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+  version="2.4">
+...
+</web-app>
 ```

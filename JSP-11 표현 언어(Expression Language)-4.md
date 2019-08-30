@@ -361,9 +361,55 @@ ${lst = [1, 2, 3, 4, 5]; lst.stream().noneMatch( x -> x > 5).get()}  <%--true--%
 ```get()``` 대신 ```orElse()```나 ```ifPresent()```등을 사용해서 값이 없어도 에러가 발생하지 않도록 해야 한다.    
   
 ***
-# 2. 대주제
-> 인용
-## 2.1. 소 주제
+# 8. 표현 언어 비활성화 방법
+JSP 규약은 ${expr} 이나 #{expr}과 같은 EL을 비활성화시키는 세 가지 방법을 제공하고 있다.  
+  
+* web.xml 파일에 비활성화 옵션 설정하기
+* JSP 페이지에 비활성화 옵션 지정하기
+* web.xml 파일을 서블릿 2.3 또는 2.4 버전에 맞게 작성하기
+   
+## 8.1. web.xml 파일에 EL 비활성화 옵션 추가하기
+EL을 비활성화 시키는 첫 번째 방법은 web.xml 파일에서 EL을 비활성화 시켜주는 옵션을 추가하는 것이다.  
+```
+<?xml version="1.0" encoding="utf-8"?>
+<web-app ...>
+ ...
+ <jsp-config>
+  ...
+  <jsp-property-group>
+    <url-pattern>/oldversion/*</url-pattern>
+    <el-ignored>true</el-ignored>
+  </jsp-property-group>  
+</web-app>
+```
+```<jsp-property-group>``` 태그의 ```<el-ignored>```를 ```true```로 설정하면  
+```<url-pattern>``` 태그로 명시한 URL 패턴에 해당하는 JSP는 EL을 모두 일반 문자로 처리한다.            
+즉, 위 코드에서는  ```/oldversion``` 경로에 위치한 JSP 파일은 EL 식을 일반 문자열로 처리한다. 
+  
+EL 중에서 ```${expr}``` 형식은 그대로 EL로 처리하고  
+```#{expr}``` 형식의 EL만 문자열로 처리하고 싶다면 web.xml 파일에 
+```<deferred-syntax-allowed-as-literal>``` 태그의 값을 ```true```로 지정해주면 된다.    
+```
+<?xml version="1.0" encoding="utf-8"?>
+<web-app ...>
+ ...
+ <jsp-config>
+  ...
+  <jsp-property-group>
+    <url-pattern>/oldversion/*</url-pattern>
+    <el-ignored>true</el-ignored>
+  </jsp-property-group>  
+  
+  <jsp-property-group>
+    <url-pattern>/oldversion2_4/*</url-pattern>
+    <deferred-syntax-allowed-as-literal>
+          true
+    </deferred-syntax-allowed-as-literal>
+  </jsp-property-group>  
+
+</web-app>
+```
+
 ### 2.1.1. 내용1
 ```
 내용1

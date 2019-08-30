@@ -119,8 +119,38 @@ ${ageList = members.stream().map(mem - > mem.age).filter(x -> x >= 20).averge().
 ${ageList = members.stream().filter(x -> x >= 20).map(mem - > mem.age).averge().get(); "}
 ```
 이렇게 순서를 바꿔도 괜찮다.  
+  
+## 7.5. sorted()를 이용한 정렬
+```sorted()```를 사용하면 스트림을 정렬할 수 있다.  
+```
+${ vals = [20, 17, 30, 2, 9, 23] ;
+   sortedVals = vals.stream().sorted().toList()}
+```
+그렇지만 ```sorted()```가 모든 타입의 원소를 정렬할 수 있는 것은 아니다.  
+```
+public class Member{
+  private String name;
+  private int age;
+  
+  public Member(String name, int age){
+    this.name = name;
+    this.age = age;
+  }
+  
+  public String getName(){return name;}
+  public int getAge(){return age;}
 
-
+}
+```
+```
+<%
+  List<Member> memberList = Arrays.asList(
+      new Member("홍길동", 20), new Member("이순신", 54),
+      new Member("유관순", 19), new Member("왕건", 42);
+    request.setAttri
+  )        
+%>
+```
 
 
 ***

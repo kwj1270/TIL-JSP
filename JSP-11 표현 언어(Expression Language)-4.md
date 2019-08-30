@@ -6,12 +6,12 @@ EL 은 for 나 while 같은 반복문을 제공하지 않는다.
 
 EL 3.0 버전에는 컬렉션 객체를 위한 스트림 API가 추가 되었고 이를 통해 코드를 간단히 작성할 수 있다.  
 ```
-<c:set var="1st" value="<%= java.util.Arrays.asList(1, 2, 3, 4, 5) %>" />
+<c:set var="lst" value="<%= java.util.Arrays.asList(1, 2, 3, 4, 5) %>" />
 <c:set var="sum" value="${1st.stream().sum()}" />
 ```
 또한, 위 코드는 세미콜론 연산자를 함께 사용하면 JSTL 태그를 사용하지 않고 EL 만으로 코드를 작성할 수 잇다.   
 ```
-${1st=[1, 2, 3, 4, 5] ; sum = 1st.stream().sum(); "}
+${lst=[1, 2, 3, 4, 5] ; sum = 1st.stream().sum(); "}
 ```
 ## 7.1. 스트림 API 기본
 ```
@@ -30,7 +30,7 @@ collection.stream()       // 콜렉션에서 스트림 생성
 중간 연산은 최종 연산을 하기 전까지 여러번 수행할 수 있으며,
 최종 연산은 딱 한번만 수행할 수 있다.  
 ```
-${1st.stream()                  // 1st 리스트의 각 요소들을 스트림 객체로 생성한다.  
+${lst.stream()                  // 1st 리스트의 각 요소들을 스트림 객체로 생성한다.  
      .filter(x -> x % 2 == 0 )  // 필터의 인자로 들어간 함수의 정의에 맞는 요소들만 걸러낸다.
      .map( x -> x*x)            // 맵의 인자로 들어간 함수의 정의대로 요소들을 변형시킨다.  
      .toList()}                 // 스트림 객체를 리스트 객체로 변형 시킨다.  
@@ -38,15 +38,15 @@ ${1st.stream()                  // 1st 리스트의 각 요소들을 스트림 �
 
 그리고 물론, 중간 연산을 취하지 않고 최종연산만 사용해도 된다.   
 ```
-1st.stream().sum()
+lst.stream().sum()
 ```
   
 ## 7.2. stream()을 이용한 스트림 생성
 ```java.util.Collection``` 타입의 객체에 대해 ```stream()``` 메서드를 실행하면 EL 스트림 객체를 생성한다.     
 필자 : 대부분의 컬렉션 프레임 워크는 ```Collection 인터페이스```를 구현하기에 EL 스트림 객체를 생성할 수 있다.     
 ```
-${1st = [1, 2, 3, 4, 5]; "}
-${1st.stream().sum()}
+${lst = [1, 2, 3, 4, 5]; "}
+${lst.stream().sum()}
 ```
 
 EL은 Map 타입의 값에 대해 ```Stream()```을 지원하지 않는다.      
@@ -236,8 +236,46 @@ ${members.stream().count()}
 ```count()```의 결과의 자료형은 ```Long``` 이다.
    
 ## 7.9. Optional 타입
-결과 값이 존재하거나 존재하지 않는 경우가 있을 때 사용하는 타입이 Optional 이다.  
+원소가 하나도 없는 스트림에서 최소값을 구하면, 원소가 하나도 없으므로 최소값 자체가 존재하지 않는다.
+이렇게 결과 값이 존재하거나 존재하지 않는 경우가 있을 때 사용하는 타입이 ```Optional``` 이다.  
+즉, 결과 값의 존재 유무에 따라 동작을 달리한다는 것을 의미한다.      
+
+* get() : 값이 존재할 경우 값을 리턴한다. 값이 존재하지 않으면 ELExeption을 발생한다.  
+* orElse(other) : 값이 존재하면 해당 값을 리턴하고, 값이 존재하지 않으면 other 를 리턴한다.
+* orElseGet((()-> T) other) : 값이 존재하면 해당 값을 리턴하고, 존재하지 않으면 람다식 other를 실행한 결과를 리턴한다.  
+* ifPresent(((x)-> void) consumer) : 값이 존재하면 람다식 consumer를 실행하고 존재하는 값을 람다식의 파리미터로 전달한다.  
+  
+```Optional``` 객체는 결과 값을 구할 때는 ```get()```을 사용한다.   
+```
+${[1, 2, 3].stream().min().get()}
+```
+  
+값이 존재하지 않는 ```Optional``` 에 대해 ```get()```을 실행하면 ```EXException```이 발생한다.  
+```
+${[].stream().min().get()}
+빈 스트림이므로 EXException 에러 발생
+```
     
+따라서 값이 존재하지 않을 수도 있다면, ```get()``` 대신 ```orElse()```를 사용해서 값이 없을 때 다른값을 사용해야 한다.
+```
+${[].stream().min().orElse('없음')}                 -> 없음 출력
+${[1, 2, 3].stream().min().orElse('없음')}          -> 값이 있으니 결과값(1) 출력
+```
+  
+orElse() 대신 orElseGet()을 사용해도 된다. orElseGet()은 값 대신 값을 생성하는 람다식을 사용한다.  
+```
+${[].stream().min().orElseGet(()-> -1)}             -> 값이 없으므로 -1 출력              
+```
+  
+값이 존재할 때 코드를 실행하고 싶다면 ```ifPresent()```를 사용한다.  
+```ifPresent()````는 결과 값을 받아 코드를 실행할 람다식을 파라미터로 갖는다.  
+```
+${minValue = '-'; "}
+${ [1, 2, 3].stream().min().ifPresent(x -> (minValue = x))}
+최소값은 ${minVlaue} 입니다. 
+```
+위 코드에서 주의점은 람다 연산자가 대입 연산자보다 우선순위가 높기에 괄호를 사용해 주어야 한다.  
+  
 ## 7.10. sum() 과 average()를 이용한 수치 연산 결과 생성
 스트림이 숫자로 구성된 경우 ```sum()```을 이용해서 합을 구할 수 있다.
 ```
@@ -254,7 +292,7 @@ ${ [1, 2, 3, 4, 5].stream().average().get() } <%--2.5 출력--%>
 ```
 ${ [].stream().average().get() } <%--'없음' 출력--%> 
 ```
-다음은 averaget() 사용 예를 보여주고 있다.  
+다음은 average() 사용 예를 보여주고 있다.  
 ```
 ${ [1, 2, 3, 4, 5].stream().average().get() }
 ${ [1, 2, 3, 4, 5].stream().average().orElse(null) }
@@ -262,8 +300,66 @@ ${ [].stream().average().orElse(O) }
 ${ [].stream().average().orElse("null") }
 ${ [1].stream().average().ifPresent(x -> someObject.add(x)) }
 ```
+    
+## 7.11. min() 과 max()를 이용한 최소/최대 구하기
+스트림 원소가 Long 이나 String 같이 Comperable 인터페이스를 구현하고 잇다면  
+```min()``` 과 ```max()```를 통해 '최소 값', '최대 값'을 구할 수 있다.    
+```
+${ someLongVals.stream().min().get() }
+```
+```average()```와 동일하게 ```min()```, ```max()``` 메서드도 ```Optional``` 타입을 리턴한다.      
+만약 크기를 구하는 규칙이 달라야 한다면 ```sorted()``` 처럼 크기 비교를 위한 람다식을 사용할 수 있다.    
+```
+<%
+  List<Member> memberList = Arrays.asList(
+      new Member("홍길동", 20), new Member("이순신", 54),
+      new Member("유관순", 19), new Member("왕건", 42)
+  );
+  request.setAttribute("members", memberList);        
+${ maxAgeMemOpt = members.stream()
+                          .max((m1, m2) -> m1.age.comapareTo(m2.age)) ; " } 
+${ maxAgeMemOpt.get().name } (${maxAgeMemOpt.get().age}세)                          
+%>
+```
+```min()``` 이나 ```max()```는 ```Optional``` 타입을 리턴하므로 실제 값을 구할 때는 ```get()```이나 ```orElse()```등을 이용해서 구한다.
+      
+## 7.12. anyMatch(), allMatch(), noneMatch()를 이용한 존재 여부 확인
+```anyMatch()```는 스트림에 조건을 충족하는 요소가 존재하는지 검사할 때 사용한다.    
+조건을 축족하는지 검사하기 위해 ```(S) - > Boolean 타입``` 람다식을 사용한다.     
+```
+${ lst = [1, 2, 3, 4, 5] ; " }
 
-
+<%-- 4보다 큰 원소가 존재하는지 확인 --%>
+${ matchOpt = lstStream().anyMatch( v -> v > 4 ) ; " }
+${ matchOpt.get() } <%--true--%>
+```
+```anyMatch()``` 메서드는 ```Optional``` 객체를 리턶나다.         
+조건을 충족하는 값이 존재할 경우 ```Optional```은 ```true```를 값으로 갖고 존재하지 않으면 ```false```를 값으로 갖는다.     
+   
+원소가 처음부터 없는 빈 스트림에 대해 ```anyMatch()```를 시행하면 ```값이 없는 Optional```을 리턴한다.    
+```
+${ matchOpt = [].stream.anyMatch( v -> v > 4 ) ; " }
+${ matchOpt.orElse(false) } <%--값이 없는 Optional인 경우 false를 리턴--%>
+${ matchOpt.get() } <%--matchOpt는 값이 없는 Optional이므로 ELException 발생--%>
+```  
+위 코드에서 ```[]``` 리스트 객체의 스트림은 원소가 없으므로, ```anyMatch()``` 메서드는 값이 없는 ```Optional```을 리턴한다.    
+따라서, ```matchOpt.get()```을 실행하면 ```ELException 발생```이 발생한다.       
+원소가 없는 스트림에 대해 ```false```를 구하려면 위 코드처럼 ```orElse()```로 값을 구해서 ```ELException``` 발생을 방지하자     
+     
+```anyMatch()```가 스트림에서 한 원소라도 조건을 충족할 대 ```true``` 값으로 갖는 ```Optional```을 리턴한다면,      
+```allMatch()```는 스트림의 모든 원소가 조건을 충족할 때 ```true```를 값으로 갖는다.     
+```
+${lst = [1, 2, 3, 4, 5]; lst.stream().allMatch( x -> x > 5).get()}  <%--false--%>
+```
+```noneMatch()```는 조건을 충족하는 원소가 한 개도 존재하지 않을 때 ```true```를 갖는 ```Optional```을 리턴한다.  
+```
+${lst = [1, 2, 3, 4, 5]; lst.stream().noneMatch( x -> x > 5).get()}  <%--true--%>
+```
+    
+마지막으로 ```allMatch()``` 와 ```noneMatch()``` 모두 빈 스트림에 대해 값이 없는 ```Optional```을 리턴한다.(에러 발생)    
+따라서, ```anyMatch()```와 마찬가지로 스트림에 값이 없을 가능성이 있다면    
+```get()``` 대신 ```orElse()```나 ```ifPresent()```등을 사용해서 값이 없어도 에러가 발생하지 않도록 해야 한다.    
+  
 ***
 # 2. 대주제
 > 인용

@@ -114,7 +114,7 @@ ${ageList = members.stream().map(mem - > mem.age).filter(x -> x >= 20).averge().
 ```
 위 코드의 ```filter()``` 메서드와 ```average()``` 메서드 그리고 ```get()``` 메서드를 사용했다.    
 ```filter()```를 통해 20세 이하의 사람의 나이만 존재하도록 걸러내고 또한, 이들의 평균 값을 계산했다.  
-값은 하나이기에 리스트를 만들 필요가 없어 ```get()``` 메서드를 사용했다.
+후에 배우지만 ```averge()```는 Optional 타입을 리턴하기에 값을 얻기 위해 ```get()```을 사용했다.  
 ```
 ${ageList = members.stream().filter(x -> x >= 20).map(mem - > mem.age).averge().get(); "}
 ```
@@ -146,10 +146,121 @@ public class Member{
 <%
   List<Member> memberList = Arrays.asList(
       new Member("홍길동", 20), new Member("이순신", 54),
-      new Member("유관순", 19), new Member("왕건", 42);
-    request.setAttri
-  )        
+      new Member("유관순", 19), new Member("왕건", 42)
+  );
+  request.setAttribute("members", memberList);        
 %>
+${ members.stream().sorted().toList() } <%-- 에러 ! --%>
+```
+에러가 발생한 이유는 ```Member 클래스```가 ```Comperable 인터페이스```를 구현하고 있지 않기 때문이다.    
+```sorted()``` 메서드는 원소를 정렬할 때 ```Comperable 인터페이스```에 정의된 기능을 사용하기 때문에,    
+이 인터페이스를 구현하지 않은 타입의 원소는 정렬할 수 없다.    
+기본 데이터형의 래퍼 클래스인 ```Integer```, ```Long```, ```String``` 과 같은 타입은 이미 오름차순에 맞게 ```Comperable```을 구현하고 있다.   
+       
+만약 ```Comperable 인터페이스```를 구현하고 있지 않은 원소를 정렬해야 하거나,   
+사용자 정의대로 정렬 순서를 지정하고 싶은 경우에는 ```sorted()``` 메서드에 값을 비교할 때 사용할 람다식을 전달하면 된다.     
+```
+${ vals = [20, 17, 30, 2, 9, 23];
+   sortedVals = vals.stream().sorted((x1, x2) -> x1 < x2 ? 1 : -1 ).toList() }
+```
+일단 **내림차순을 위한 정렬 코드**이다.    
+sorted()의 람다식은 두 개의 파라미터를 갖는다.         
+첫 번째 파라미터와 두 번째 파라미터를 비교해서,     
+첫 번째 파라미터가 정렬 순서상 앞에 위치해야 하면 음수를 리턴하고    
+뒤에 위치해야 하면 양수를 리턴한다.     
+여기서는 음수를 양수를 리턴했으니 뒤에 위치 시킨 것이다.    
+반대로 ```(x1, x2) -> x1 > x2 ? 1 : -1 )``` 일 경우는 오름차순으로 정렬 된다.       
+     
+이제 앞서 정의했던 Member 클래스에 대해서 정렬을 해보겠다.    
+```
+<%
+  List<Member> memberList = Arrays.asList(
+      new Member("홍길동", 20), new Member("이순신", 54),
+      new Member("유관순", 19), new Member("왕건", 42)
+  );
+  request.setAttribute("members", memberList);        
+%>
+${ sortedMem = members.stream()
+                      .sorted((m1, m2) -> m1 > m1.age.compareTo(m2.age))
+                      .toList() ; " } 
+```
+그리고 이 예제를 실행하려면 ```Member.java```를 컴파일 해서 클래스 파일을 만들어 주어야 한다.     
+``` javac -d classes src\chap11\Member.java```    
+   
+## 7.6. limit()을 이용한 개수 제한
+```limit()``` 은 지정한 개수를 갖는 새로운 스트림을 생성한다.  
+```sorted()``` 와 ```limit()```을 함께 사용하면 값을 정렬하고 그 결과 중에서 앞에 n개만 걸러낼 수 있다.  
+```
+${ nums.stream().sorted().limit(3).toList() }
+```
+   
+## 7.7. toList()와 toArray()를 이용한 결과 생성
+```toList()``` 는 자바 리스트 객체를 생성하고,  
+```toArray()```는 자바 배열 객체를 생성한다.  
+```
+${ lst = member.stream().map(m -> m.name).toList(); " }
+${ arr = member.stream().map(m -> m.age).toArray(); " }
+```
+EL 에서 ${ 리스트타입값 } 과 ${ 배열타입값 } 은 서로 다르게 출력한다.      
+    
+**1. 리스트 타입의 경우 각 원소의 값을 문자열로 변환해서 출력한다.**    
+```
+<%
+  List<Member> memberList = Arrays.asList(
+      new Member("홍길동", 20), new Member("이순신", 54),
+      new Member("유관순", 19), new Member("왕건", 42)
+  );
+  request.setAttribute("members", memberList);        
+${ members.stream().map( m -> m.name ).toList() }  <%-- [홍길동, 이순신, 유관순, 왕건] 출력 --%>
+%>
+```
+이 경우 ```"[홍길동, 이순신, 유관순, 왕건]"```을 EL의 결과로 출력한다.  
+
+**2. 배열 타입의 경우 배열 객체의 문자열 표현을 출력한다.**  
+```
+<%
+  List<Member> memberList = Arrays.asList(
+      new Member("홍길동", 20), new Member("이순신", 54),
+      new Member("유관순", 19), new Member("왕건", 42)
+  );
+  request.setAttribute("members", memberList);        
+${ members.stream().map( m -> m.name ).toArray() }  <%-- Ljava.;an.Object;@7385bOf9 출력 --%>
+%>
+```
+   
+## 7.8. count() 를 이용한 개수 확인
+```count()``` 연산은 스트림의 원소 개수를 리턴한다.  
+```
+${members.stream().count()}
+```
+```count()```의 결과의 자료형은 ```Long``` 이다.
+   
+## 7.9. Optional 타입
+결과 값이 존재하거나 존재하지 않는 경우가 있을 때 사용하는 타입이 Optional 이다.  
+    
+## 7.10. sum() 과 average()를 이용한 수치 연산 결과 생성
+스트림이 숫자로 구성된 경우 ```sum()```을 이용해서 합을 구할 수 있다.
+```
+${ [1, 2, 3, 4, 5].stream().sum() } <%--15 출력--%> 
+```
+  
+```average()```는 값의 평균을 구한다. 
+```average()```와 ```sum()```의 차이점이 있다면 ```Optional``` 타입을 리턴한다.  
+그래서 ```average()```를 사용하면 리턴하는 값에 대해서 ```Optional``` 처리 메서드를 사용해주어야 한다.   
+```
+${ [1, 2, 3, 4, 5].stream().average().get() } <%--2.5 출력--%> 
+```
+스트림의 원소가 없는 경우 average()는 값이 없는 Optional 을 리턴한다.  
+```
+${ [].stream().average().get() } <%--'없음' 출력--%> 
+```
+다음은 averaget() 사용 예를 보여주고 있다.  
+```
+${ [1, 2, 3, 4, 5].stream().average().get() }
+${ [1, 2, 3, 4, 5].stream().average().orElse(null) }
+${ [].stream().average().orElse(O) }
+${ [].stream().average().orElse("null") }
+${ [1].stream().average().ifPresent(x -> someObject.add(x)) }
 ```
 
 

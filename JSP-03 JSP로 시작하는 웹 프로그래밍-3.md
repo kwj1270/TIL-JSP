@@ -121,9 +121,9 @@ getParameterMap()                | java.util.Map         | 웹 브라우저가 �
 ```
 **요청 처리 JSP 예시**
 ```
-<% @page contentType="text/html; charset=utf-8" %>
-<% @page import="java.util.Enumeration" %>
-<% @page import="java.util.Map" %>
+<%@ page contentType="text/html; charset=utf-8" %>
+<%@ page import="java.util.Enumeration" %>
+<%@ page import="java.util.Map" %>
 <%
   request.setCharacterEncoding("utf-8");
 %>
@@ -136,7 +136,7 @@ address 파라미터 = <%= request.getParameter("address") %>
 <p>
 <b>request.getParameterValues() 메서드 사용</b><br>
 <%
-  String[] values = request.getParameterValues();
+  String[] values = request.getParameterValues("pet");  //.getParameterValues();
   if(values !=null){
     for(int i = 0; i < values.length ; i++){
 %>
@@ -159,8 +159,8 @@ address 파라미터 = <%= request.getParameter("address") %>
 <p>
 <b>getParameterMap() 메서드 사용</b><br>
 <%
-  Map parameterMap = request.getParameterNames();
-  String[] nameParam = (String[])parameterMap.get("name") // 키 값 넣으면 된다.
+  Map parameterMap = request.getParameterMap();
+  String[] nameParam = (String[])parameterMap.get("name"); // 키 값 넣으면 된다.
   if(nameParam != null){
 %>
   name = <%= nameParam[0] %>

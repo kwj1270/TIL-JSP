@@ -92,5 +92,107 @@ request.setAttribute("info", info);   // value 는 Object 이기에 아무거나
 * property : 값을 지정할 프로퍼티의 이름을 지정한다. (값을 바꿀 인스턴스 변수이름)      
 * value : 프로퍼티 값을 지정한다. 표현식(```<%= %>```)이나 EL(```${값}```)을 사용할 수 있다. 
    
-```<jsp:setProperty>``` 액션 태그에서 ```value=""``` 대신에 ```param=""```을 사용할 수 있다.     
-이는 파라미터와 프로퍼티의 이름이 같을 경우 ```프로퍼티의 값 = 파라미터 값```으로 할당시키는 속성이다.      
+```<jsp:setProperty>``` 액션 태그에서 ```value=""```를 사용하지 않고 ```param=""```을 사용할 수 있다.       
+이는 파라미터와 프로퍼티의 이름이 같을 경우 ```프로퍼티의 값 = 파라미터 값```으로 할당시키는 속성이다.         
+같은 이름을 가진 프로퍼티에 값을 할당해주는 것이니  ```value=""```는 사용하지 않는 것이다.    
+```
+<jsp:setProperty name="[자바빈/참조변수]" property="인스턴스 변수명" param="파라미터 이름" />
+```
+  
+```param=""```은 ```property="인스턴스 변수명"```으로 정해진 하나의 프로퍼티에 대해서 동작을 한다.   
+```property=""```에 ```*```를 넣어도 되는데 이는 모든 파라미터의 이름과 같은 프로퍼티의 값을 지정하는 것이다.      
+프로퍼티에 대한 일치하는 모든 파라미터의 값을 사용하기에 ```value=""```이나 ```param=""```을 기술하지는 않는다.   
+```
+<jsp:setProperty name="[자바빈/참조변수]" property="*" />
+```
+  
+# 4. 
+```<jsp:getProperty>``` 액션 태그는 자바빈 객체의 프로퍼티 값을 출력할 때 사용된다.     
+```  
+<jsp:getProperty name="[자바빈/참조변수]" property="인스턴스 변수명" />
+```
+```<jsp:getProperty>``` 액션 태그는 ```자바빈 참조변수.get프로퍼티()```를 사용한 것이다.   
+
+# 5.
+**membershipForm.jsp**
+```
+<%@ page contentType="text/html; charset=utf-8" %>
+<html>
+<head><title>회원 가입 입력 폼</title></head>
+<body>
+<form action="/chap08/processJoining.jsp" method="post">
+<table border="1" cellpadding="0" cellspacing="0">
+<tr>
+  <td>아이디</td>
+  <td colspan="3"><input type="text" name="id" size="10"></td>
+</tr>
+<tr>
+  <td>이름</td>
+  <td><input type="text" name="name" size="10"></td>
+  <td>이메일</td>
+  <td><input type="text" name="email" size="10"></td>
+</tr>
+<tr>
+  <td colspan="4" align="cetner">
+  <input type="submit" value="회원가입">
+  </td>
+</tr>  
+</table>
+</form>
+</body>
+</html>
+```
+**processJoining.jsp**  
+```
+<%@ page contentType="text/html; charset=utf-8" %>
+<%
+  request.setCharacterEncoding("utf-8");
+%>
+<jsp:uesBean id="memberInfo" class="chap08.member.MemberInfo" scope="page" />
+<jsp:setProperty name="memberInfo" property="*" />
+<jsp:setProperty name="memberInfo" property="password" value="<%= memberInfo.getId() %>" />
+<html>
+<head><title>가입</title></head>
+<body>
+
+<table width="400" border="1" cellpadding="0" cellspacing="0">
+<tr>
+  <td>아이디</td>
+  <td><jsp:getProperty name="memberInfo" property="id" /></td>
+  <td>암호</td>
+  <td><jsp:getProperty name="memberInfo" property="password" /></td>
+</tr>
+<tr>
+  <td>이름</td>
+  <td><jsp:getProperty name="memberInfo" property="name" /></td>
+  <td>이메일</td>
+  <td><jsp:getProperty name="memberInfo" property="email" /></td>
+</tr>  
+</table>
+
+</body>
+</html>
+```
+이번 예제에서 알아야 할 점은 ```<jsp:setProperty>``` 액션 태그를 사용함으로써    
+요청 파라미터의 값을 간단하게 자바빈 객체의 프로퍼티에 저장할 수 있다는 점이다.     
+만약 ```<jsp:setProperty>``` 액션 태그를 사용하지 않았다면 아래와 같은 코드를 작성해야한다.       
+```  
+//<jsp:setProperty name="memberInfo" property="*" />  
+memberInfo.setId(request.getParameter("id"));
+memberInfo.setName(request.getParameter("name"));
+memberInfo.setEmail(request.getParameter("email"));
+```
+이러한 이유로 사용자가 입력한 폼 값을 자바빈 객체에 저장할 때에는      
+```<jsp:setProperty>``` 액션 태그를 사용할 수 있도록 **파라미터의 이름과 자바빈 프로퍼티의 이름을 맞춘다.**    
+
+# 6.
+자바빈 프로퍼티 ```width```의 타입이 ```int``` 일 경우를 생각해보자,     
+```
+<jsp:setProperty name="someBean" property="width" value="100" />
+```
+우선 ```value="100"``` 으로 기술 되어 있고 100은 문자열로 처리되어있다.  
+이 경우 ```<jsp:setProperty>``` 액션 태그는 값을 어떻게 처리할까?  
+  
+```<jsp:setProperty>``` 액션 태그는 프로퍼티 타입에 따라서 알맞게 값을 처리한다.    
+즉, ```value="100"```으로 문자열로 기술되어있어도 100으로 처리해준다.    
+정확히는 ```래퍼클래스.valueOf(String)```으로 처리해주기에 문자열을 알맞은 값으로 매핑 시켜준다.     

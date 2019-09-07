@@ -274,6 +274,16 @@ Expires         | HTTP 1.0 버전에서 지원하는 헤더
 **java.net.URLEncoder 클래스**를 사용하여 **encode() 클래스 메서드**를 사용하면 이를 해결할 수 있다.     
 사용법은 ```URLEncoder.encode(바꿀 값 , 변경할 캐릭터 셋)```이다.    
 
+```
+<% @page contentType="text/html; %>
+<% @page import="java.net.URLEncoder" %>
+<%
+  String value = "자바";
+  String encodedValue = URLEncoder.encode(value, "utf-8");
+  response.sendRedirect("/chap03/index.jsp?name="+encodedValue); //문자열+문자열
+%>
+```
+
 # 8.
 JSP의 주석은 HTML영역과 자바영역이 따로 구분되어져 있기에 각각 언어에 맞는 주석을 사용해주어야 한다.   
 ```

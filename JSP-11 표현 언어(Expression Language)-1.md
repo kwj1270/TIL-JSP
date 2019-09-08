@@ -49,7 +49,7 @@ EL을 통해서 표현식보다 편리하게 값을 출력할 수 있다.
   m.setName("이름1");
 %>
 <c:set var="in" value="<%= m %>" />
-<c:set var="name" value="&{m.name}" /> <!-- m.get("name") --><!-- 이 시점에 EL 변수 값 대입 -->
+<c:set var="name" value="${m.name}" /> <!-- m.get("name") --><!-- 이 시점에 EL 변수 값 대입 -->
 <% m.setName("이름2"); %>
 ${m.name} <%-- name의 값은 "이름1" --%>
 ```

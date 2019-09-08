@@ -48,7 +48,7 @@ EL을 통해서 표현식보다 편리하게 값을 출력할 수 있다.
   Member m = new Member();
   m.setName("이름1");
 %>
-<c:set var="in" value="<%= m %>" />
+<c:set var="m" value="<%= m %>" />
 <c:set var="name" value="${m.name}" /> <!-- m.get("name") --><!-- 이 시점에 EL 변수 값 대입 -->
 <% m.setName("이름2"); %>
 ${name} <%-- name의 값은 "이름1" --%>
@@ -65,7 +65,7 @@ ${name} <%-- name의 값은 "이름1" --%>
   Member m = new Member();
   m.setName("이름1");
 %>
-<c:set var="in" value="<%= m %>" />
+<c:set var="m" value="<%= m %>" />
 <c:set var="name" value="#{m.name}" /> <!-- m.get("name") -->
 <% m.setName("이름2"); %> <!-- 이 시점에 EL 변수 값 대입 -->
 ${name} <%-- name의 값은 "이름2" --%>

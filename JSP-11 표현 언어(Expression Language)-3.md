@@ -83,7 +83,7 @@ JSP 2.2 버전부터는 ```setCelsius(String location, Double value)``` 나 ```D
 JSP의 표현식은 자바의 클래스를 마음대로 사용할 수 있다.  
 ```
 <%
-  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+  SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
   Date date = new Date();
 %>
 ...

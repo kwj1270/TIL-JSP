@@ -185,3 +185,34 @@ try {
   if (pstmt != null) try {pstmt.close();} catch(IOException ex) {}
 }
 ```
+# 6. 웹 어플리케이션 구동 시 JDBC 드라이버 로딩하기  
+'웹 어플리케이션 구동 시 JDBC 드라이버 로딩하기'라는 말은 말 그대로 처음부터 
+```Class.forName("com.mysql.jdbc.Driver")```를 자동으로 실행하게끔 설정하는 것이다.  
+```
+package jdbc;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+
+public class MySQLDriverLoader extends HttpServlet {
+
+	public void init(ServletConfig config) throws ServletException{
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}catch (Exception ex) {
+			throw new ServletException(ex);
+		}
+	}
+}
+```
+**web.xml**
+```
+	<servlet>
+		<servlet-name>mysqlDriverLoader</servlet-name>
+		<servlet-class>jdbc.MySQLDriverLoader</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+```
+xml에 이같은 코드를 입력해 놓으면 웹 어플리케이션 실행시 자동으로 해당 클래스를 실행하도록 하는 것이다. 
+정확히는 모르겠지만 ```init()``` 메소드를 실행하는 것 같다.

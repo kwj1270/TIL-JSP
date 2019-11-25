@@ -9,7 +9,9 @@ JSP-우분투 리눅스에서 톰캣 사용하기
 1. apt-get install tomcat8
 2. wget http://mirror.navercorp.com/apache/tomcat/tomcat-9/v9.0.29/bin/apache-tomcat-9.0.29.tar.gz
 
+https://wnsgml972.github.io/linux/linux_ubuntu_tomcat.html 
 ## 1.1. apt-get install tomcat8
+https://coding-factory.tistory.com/58
 1. 터미널 접속
 2. root로 접속하거나 sudo 사용
 3. JDK가 깔려있어야 하므로 ```java-version```을 입력하여 JDK가 설치되었는지 확인
@@ -20,11 +22,9 @@ JSP-우분투 리눅스에서 톰캣 사용하기
 7. url에 자신의 ip 및 포트번호(8080) 입력 -> ```ip주소:8080``` 
 8. 
 
-### 1.1.1. 내용1
-```
-내용1
-```
+
 ## 1.2. 소 주제
+http://june0313.github.io/2018/05/22/install-tomcat-on-ubuntu/
 ### 1.2.1. 내용1
 ```
 내용1

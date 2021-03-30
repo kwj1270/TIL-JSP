@@ -1,7 +1,7 @@
 JSP로 시작하는 웹 프로그래밍-2
 =======================
 # 3. page 디렉티브
-```
+```jsp
 <% @page 속성 = "값" 속성2 = "값2" ... %>
 
 디렉티브 이름이 page인 것을 'page 디렉티브' 라고 한다.
@@ -64,7 +64,7 @@ JSP에서 주로 사용하는 MIME 타입은 ```"text/html"```이고 필요에 �
 JSP에서도 page 디렉티브의 ```import```속성을 사용해서 클래스의 단순 이름을 사용할 수있다.  
      
 **예시**
-```
+```jsp
 <% @page import="java.util.Date" %>
 ...중략
 <%
@@ -84,7 +84,7 @@ JSP에서도 page 디렉티브의 ```import```속성을 사용해서 클래스�
 ### 3.1.3. trimDirectiveWhitespaces 속성
 웹 브라우저에 사용가능한 코드가 있다고 가정시  
 ```page 디렉티브```는 웹 브라우저에서 '소스보기'를 하면 공백으로 사라진다.
-```
+```jsp
                                 <--- 여기가 공백으로 처리됨
 <html>
 <head>
@@ -96,7 +96,7 @@ JSP에서도 page 디렉티브의 ```import```속성을 사용해서 클래스�
 ```<% @page trimDirectiveWhitespaces="true" %>```를 사용하게 되면 웹 브라우저에서 '소스보기'에도 공백이 사라지지 않는다.    
     
 **예시**  
-```
+```jsp
 <% @page contentType="text/html; charset=utf-8" %>
 <% @page trimDirectiveWhitespaces="true" %>
 <html>
@@ -107,7 +107,7 @@ JSP에서도 page 디렉티브의 ```import```속성을 사용해서 클래스�
 </html>
 ```
 **결과**
-```
+```jsp
 <html>
 <head>
 </head>

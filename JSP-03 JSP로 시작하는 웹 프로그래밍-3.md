@@ -34,7 +34,7 @@ getServerName()         | String  | 연결할 때 사용한 서버 이름을 구
 getServerPort()         | int     | 서버가 실행중인 포트 번호를 구한다.
 ```
 **에제**
-```
+```jsp
 <% @page contentType ="text/html; charset=utf-8" %>
 <html>
 <head><title>클라이언트 및 서버 정보</title></head>
@@ -54,7 +54,7 @@ getServerPort()         | int     | 서버가 실행중인 포트 번호를 구�
 </body>
 </html>
 ```
-```
+```jsp
 http://localhost:8080/chap03/requestInfo.jsp
 
 request.getServerName() : localhost:
@@ -63,7 +63,7 @@ request.getRequestURI() : /chap03/requestInfo.jsp
 ```
 ## 5.2. 요청 파라미터 처리
 ### 5.2.1. HTML 폼과 요청 파라미터
-```
+```jsp
 <form action="chap03/viewParameter.jsp" method="post">
 이름: <input type="text" name="name" size="10"><br>
 주소: <input type="text" name="address" size="30"><br>
@@ -80,7 +80,7 @@ request.getRequestURI() : /chap03/requestInfo.jsp
 예를 들어, 이름 입력 요소와 주소 입력에 각각 "홍길동"과 "전주시"를 입력한 후 전송 버튼을 누르면     
     
 **파라미터**
-```
+```jsp
 name=홍길동
 address=전주시
 ```
@@ -100,7 +100,7 @@ getParameterMap()                | java.util.Map         | 웹 브라우저가 �
 이제 예제를 통해서 전체 메소드의 동작 방식을 알아보자    
   
 **요청 전송 폼 예시**
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <html>
@@ -121,7 +121,7 @@ getParameterMap()                | java.util.Map         | 웹 브라우저가 �
 </html>
 ```
 또는 
-```
+```jsp
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <html>
@@ -142,7 +142,7 @@ getParameterMap()                | java.util.Map         | 웹 브라우저가 �
 </html>
 ```
 **요청 처리 JSP 예시**
-```
+```jsp
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="java.util.Map" %>
@@ -198,7 +198,7 @@ name="address"  텍스트 필드에는 전주시 입력
 name="pet"      체크박스에는 강아지, 고양이 클릭(체크)
 ```
 **결과**
-```
+```jsp
 request.getParameter() 메서드 사용
 name 파라미터 = 홍길동
 address 파라미터 = 전주시
@@ -241,7 +241,7 @@ name = 홍길동
 전송 방식에 따라 동작하는 방법이 많이 다르니 기억해두자
   
 **GET 방식**
-```
+```jsp
 <form action="전송경로" method="get">...</form>
 __________________________________________________
 주소창 결과)
@@ -272,7 +272,7 @@ Cache-Control: max-age=0
 이는 한편으로 보안에 문제가 생길 수 있는 요소이다.        
        
 **POST 방식**   
-```
+```jsp
 <form action="전송경로" method="post">...</form>
 __________________________________________________
 주소창 결과)
@@ -328,7 +328,7 @@ name=cbk&address=seoul&pet=cat
 * server.xml 파일에서 ```<Connector>```의 ```useBodyEncodingForURI``` 속성의 값을 ```true```로 한다.     
       
 기본적으로 제공하는  ```<Connector>```태그에는 ```useBodyEncodingForURI```가 없으므로 이를 추가하고 값을 넣어주자     
-```
+```jsp
 <Connector port="8080" protocol="HTTP/1.1"
            connectionTimeout="20000"
            redirectPort="8443"
@@ -343,7 +343,7 @@ name=cbk&address=seoul&pet=cat
   
 **POST 디코딩 방식**     
 ```post 방식``` 일반적으로 디코딩을 처리해주는 ```request.setCharacterEncoding(캐릭터 셋)```을 사용한다.
-```
+```jsp
 <%
   request.setCharacterEncoding("utf-8");
   String name=requset.getParameter("addresss");
@@ -371,7 +371,7 @@ getDateHeader(String name)    | long                  | 지정한 헤더의 값�
 정확히 말하면 ```현재시간 - 1970년 1월 1일``` 시간의 밀리세컨드 단위 초의 값을 나타낸다.     
   
 **간단한 사용법**
-```
+```jsp
 <%
   Enumeration headerEnum = request.getHeaderNames();
   while(headerEnum.hasMoreElements()){

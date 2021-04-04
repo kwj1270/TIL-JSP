@@ -1,25 +1,25 @@
 
-시험 -> 
-서블릿 url 매핑
-url 매핑 했을시에 여러개의 컨트롤러 나누는 것 
-서블릿 라이프 사이클 
-Request/Response 의 상속구조, Servlet 상속 구조  
+시험 ->   
+서블릿 url 매핑   
+url 매핑 했을시에 여러개의 컨트롤러 나누는 것    
+서블릿 라이프 사이클    
+Request/Response 의 상속구조, Servlet 상속 구조       
 글 작성자의 IP주소 가져오기  
-스크립트 4가지
-지시자, 페이지, 태그라이브러리, 인클루드
-세션, 쿠키 
-JSP, 9개의 내장객체 (4개)
-포워드, 리다이렉트 
-get/post 차이점 , 서블릿에서 어떻게 사용할 것인지
-el 태그 
-mvc 패턴
-에러페이지, 에러코드, 처리방법, 예외처리   
-검색, db 쿼리, crud, while, 
-db 연결 코드들 
+스크립트 4가지   
+지시자, 페이지, 태그라이브러리, 인클루드   
+세션, 쿠키    
+JSP, 9개의 내장객체 (4개)    
+포워드, 리다이렉트     
+get/post 차이점 , 서블릿에서 어떻게 사용할 것인지   
+el 태그    
+mvc 패턴     
+에러페이지, 에러코드, 처리방법, 예외처리       
+검색, db 쿼리, crud, while,   
+db 연결 코드들    
+      
+requset 나 session에 담아서 포워딩   
    
-requset 나 session에 담아서 포워딩 
-
-세션 타임아웃 
+세션 타임아웃    
 
 # Servlet 이란?  
 자바를 사용하여 웹 페이지를 동적으로 생성하는 서버측 **프로그램** 혹은 그 사양을 말하며 흔히 `서블릿`이라 부른다.    
@@ -91,3 +91,48 @@ request.getRemoteAddr()
   * `<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>`
   * `<%@ include file="loginCheck.jsp" %>`
 * 주석 : `<%-- --%>`
+
+# EL 태그 
+Map 또는 getter를 가진 빈이이어 한다.  
+
+* `${map, map의 키}`   
+* `${javabean, bean프로퍼티}`   
+* `${userinfo["name"]}`, `${userinfo.name}`   
+
+내장객체
+* requestScope
+* seesionScope
+* applicationScope
+* pageContext
+
+이 외에도  
+* param
+* cookie
+
+프로퍼티만으로 사용한다면  
+`pageScope > requsetScope > sessionScope > applicationScope` 순으로 찾는다.  
+  
+예시  
+`${cookie.id.value}`     
+  
+연산자  
+대부분의 연산자를 지원하며 `empty`도 지원한다.   
+
+* 값이 null : true 
+* 값이 빈 문자열 "" : true
+* 길이가 0인 배열 : true
+* 빈 Map 객체 : true
+* 빈 Collection : true
+
+# JSTL  
+C priefx, `http://java.sun.com/jsp/jstl/core`     
+`<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core">`    
+
+`<c:if test="${a eq b}"></c:if>`
+`<c:forEach item="${items}" var="row"></c:forEach>`
+`<c:set></c:set>`
+`<c:choose><c:when></c:when><c:otherwise></c:otherwise></c:choose>`
+
+# 세션 쿠키   
+
+

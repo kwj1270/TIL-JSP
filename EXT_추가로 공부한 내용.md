@@ -68,6 +68,13 @@ Servlet 은 최상단
   get보다 느리다. 
   
 # URL 분리
-`http://localhost:7777/BackEndProject/Hello``?``parameter`=`value``&`..
-URL,        
+
+* URL : `http://localhost:7777/BackEndProject/Hello`   
+* QueryString : `?`
+* parameterName: 파라미터 이름
+* parameterValue : =value
+* 파라미터 구분자 : `&`
+
+   
+
 

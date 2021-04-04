@@ -133,7 +133,47 @@ C priefx, `http://java.sun.com/jsp/jstl/core`
 `<c:set></c:set>`
 `<c:choose><c:when></c:when><c:otherwise></c:otherwise></c:choose>`
 
-# 세션 쿠키   
+# 쿠키 / 세션   
+## 쿠키 
+**쿠키**
+* 서버에서 **사용자의 컴퓨터에 저장**하는 정보파일
+* 사용자의 명령이 없어도 HttpRequest header에 자동 등록된다.  
+* key / value 형태의 String 
+* 브라우저 마다 저장되는 쿠키는 다르다.  
+
+**사용처**
+* 세션관리 : 세션도 쿠키의 일종, 사용자 아이디/접속시간/장바구니 정보 저장  
+* 개인화 : 사용자마다의 쿠키 데이터를 통해 적절한 추천 서비스 제공  
+* 트래킹 : 쿠키를 통해 사용자의 행동과 패턴을 분석하고 기록  
+
+**Cookie 구성 요소**   
+* 이름 : 여러 쿠키를 구분하는 식별자 역할 
+* 값 : 쿠키의 이름과 매핑되는 값 
+* 유효기간 : 쿠키의 유효기간 
+* 도메인 : 쿠키를 전송할 도메인 
+* 경로 : 쿠키를 전송할 요청 경로  
+  
+**쿠키의 동작 순서**   
+* 클라이언트가 페이지 요청 
+* 서버가 Http Response header에 쿠키 넣어 보냄 
+* 브라우저는 넘겨받은 쿠키를 PC에 저장 
+* 클라이언트가 페이지 요청시 쿠키 같이 보냄  
+* 브라우저가 종료되어도 쿠키는 라이프타임동안 종료 안됨  
+
+**쿠키의 특징**
+* 이름, 값, 만료일, 경로 정보로 구성되어 있다.  
+* 클라이언트에 총 300개의 쿠키를 저장할 수 있다.  
+* 하나의 도메인당 20개의 쿠키를 가질 수 있다.  
+* 하나의 쿠키는 4KB까지 저장가능하다.  
+
+**자바 코드**
+* 생성 : Cookie cookie new Cookie(key, value);
+* 값변경 : cookie.setValue(String value); 
+* 값얻기 : String value = cookie.getValue();
+* 도메인 변경 : cookie.setDomain(domain);  
+* 도메인 얻기 : cookkie.getDomain();  
+* 
+
 
 # MVC
 * Model : 비즈니스 로직을 처리하는 모든 것, data를 알맞게 처리하고 이를 다시 Controller에게 넘긴다.  

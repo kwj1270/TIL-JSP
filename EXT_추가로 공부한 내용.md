@@ -205,11 +205,10 @@ C priefx, `http://java.sun.com/jsp/jstl/core`
 * 제거 : session.removeAttribute(키) / session.invalidate()   
 * 생성시간 : session.getCreationTime()
 * 마지막 접근 시간 : session.getLastAccessedTime()  
-
+* `session.setMaxInactiveInterval(20*60);`
 
 
 # MVC
 * Model : 비즈니스 로직을 처리하는 모든 것, data를 알맞게 처리하고 이를 다시 Controller에게 넘긴다.  
 * View : 화면 표시만 담당한다., 로직은 1도 없어야 한다.     
 * Controller : 로직을 처리하기 위한 model을 호출한다.   
-*  

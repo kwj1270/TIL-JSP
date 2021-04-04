@@ -82,6 +82,12 @@ request.getRemoteAddr()
 ```
 
 # 스크립트 4요소  
-
-
-
+* 스크립트릿(Scriptlet) : `<% %>`
+* 표현식(Expression) : `<%= %>`
+* 선언부(Declaration) : `<%! %>`  
+* `<%@ directive{지시어 속성} %>` : 
+  page 지시어 import를 제외하고 다른 속성들은 한번만 나와야한다
+  * `<%@ page contentType="text/html;charset=utf-8"%>`
+  * `<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>`
+  * `<%@ include file="loginCheck.jsp" %>`
+* 주석 : `<%-- --%>`

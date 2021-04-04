@@ -75,6 +75,13 @@ Servlet 은 최상단
 * parameterValue : =value
 * 파라미터 구분자 : `&`
 
-   
+# 글 작성자의 IP주소 가져오기  
+
+```java
+request.getRemoteAddr()
+```
+
+# 스크립트 4요소  
+
 
 

@@ -58,3 +58,16 @@ Servlet 은 최상단
 
 # GET POST 차이 
 
+* **GET :** 
+  HttpRequset Header 에 URL이 붙어서간다.   
+  쿼리스트링  
+  데이터양에 제한이 있다, 2048   
+* **POST :**
+  HttpRequset Body 에 데이터가 붙어서 전달,
+  데이터 제한 없으며 최소한의 보안 효과  
+  get보다 느리다. 
+  
+# URL 분리
+`http://localhost:7777/BackEndProject/Hello``?``parameter`=`value``&`..
+URL,        
+

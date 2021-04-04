@@ -172,7 +172,40 @@ C priefx, `http://java.sun.com/jsp/jstl/core`
 * 값얻기 : String value = cookie.getValue();
 * 도메인 변경 : cookie.setDomain(domain);  
 * 도메인 얻기 : cookkie.getDomain();  
-* 
+* 패스 변경 : cookie.setPath(path);  
+* 패스 얻기 : cookkie.getPath();  
+* 유효시간 변경 : cookkie.setMaxAge(age);, cookkie.setMaxAge(0);   
+* 유효시간 얻기 : cookkie.getMaxAge();  
+* 보내기 : response.addCookie(cookie)
+* 쿠키 얻기 : request.getCookies();
+
+## 세션 
+방문자가 웹 서버에 접속한 상태 저장 
+메모리에 Object 형태로 저장
+메모리 허용하는 한 제한없이 저장 가능 
+
+**세션의 동작 순서**   
+* 클라이언트가 페이지 요청
+* 세션 ID 확인 
+* 세션 ID 존재 안하면 만들어서 반환해줌
+* 브라우저는 세션 아이디를 쿠키를 이용해 저장 
+* 클라이언트 재 접속시 이 쿠키를 이용하여 세션값 서버에 전달 및 갱신 
+
+**세션의 특징**
+* 웹 서버에 웹 컨테이너 상태를 유지하기 위한 정보로 사용 
+* 서버에 저장되는 쿠키 
+* 브라우저 닫을시, 세션도 삭제 -> 보안 굿 
+* 데이터 제한 없음
+* 클라이언트 고유 SessionID 발급
+* `JSESSIONID=세션값` 으로 사용
+
+* 생성 : request.getSession();
+* 저장 : session.setAttribute(키,값)
+* 얻기 : session.getAttribute(키) 
+* 제거 : session.removeAttribute(키) / session.invalidate()   
+* 생성시간 : session.getCreationTime()
+* 마지막 접근 시간 : session.getLastAccessedTime()  
+
 
 
 # MVC
